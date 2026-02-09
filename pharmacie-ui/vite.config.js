@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   preview: {
-    allowedHosts: ['pharmasys-3.onrender.com']
+    allowedHosts: ['pharmasys-4.onrender.com']
   }
 })
