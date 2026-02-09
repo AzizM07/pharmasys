@@ -7,7 +7,10 @@ export default function Alertes() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/alertes")
+    const API_BASE = "https://pharmasys-1.onrender.com";
+
+fetch(`${API_BASE}/api/alertes`)
+
       .then(res => res.json())
       .then(setAlertes)
       .catch(err => console.error("Erreur alertes:", err));

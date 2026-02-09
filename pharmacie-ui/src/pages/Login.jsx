@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// 🔹 On centralise l'URL de l'API
+const API_BASE = "https://pharmasys-1.onrender.com";
+
 export default function Login() {
   const [login, setLogin] = useState("");
   const [pwd, setPwd] = useState("");
@@ -9,29 +12,26 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // On vide l'erreur précédente avant de tenter une connexion
     setError("");
 
-    fetch("http://localhost:8080/api/login", {
+    fetch(`${API_BASE}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ login, pwd }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Erreur réseau");
+        return res.json();
+      })
       .then((json) => {
-        // Si le serveur ne renvoie pas de rôle, c'est que l'auth a échoué
         if (!json.role) {
           setError("Login ou mot de passe incorrect");
           return;
         }
 
-        // ✅ SAUVEGARDE CRUCIALE : On stocke l'ID et le rôle dans le navigateur
-        // Cela permet de savoir qui est connecté sur toutes les autres pages
+        // Sauvegarde de l'utilisateur dans le navigateur
         localStorage.setItem("userId", json.id);
         localStorage.setItem("userRole", json.role);
-
-        console.log("Utilisateur connecté avec l'ID:", json.id);
 
         // Redirection selon le rôle
         if (json.role === "PHARMACIEN") {
