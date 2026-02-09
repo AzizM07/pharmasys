@@ -9,7 +9,7 @@ COPY lib ./lib
 
 RUN mkdir out \
  && find api dao model -name "*.java" > sources.txt \
- && javac -d out @sources.txt
+ && javac -cp "lib/*" -d out @sources.txt
 
 EXPOSE 8080
 
