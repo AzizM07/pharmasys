@@ -8,7 +8,8 @@ COPY model ./model
 COPY lib ./lib
 
 RUN mkdir out \
- && javac -d out api/**/*.java dao/**/*.java model/**/*.java
+ && find api dao model -name "*.java" > sources.txt \
+ && javac -d out @sources.txt
 
 EXPOSE 8080
 
