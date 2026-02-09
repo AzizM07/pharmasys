@@ -9,10 +9,10 @@ public class ServerApp {
     public static void main(String[] args) throws Exception {
 
         // ✅ Utiliser le port fourni par Render ou fallback sur 8080
-        String portEnv = System.getenv("PORT");
-        int port = portEnv != null ? Integer.parseInt(portEnv) : 8080;
+    String portEnv = System.getenv("PORT");
+    int port = portEnv != null ? Integer.parseInt(portEnv) : 8080;
+    Server server = new Server(port);
 
-        Server server = new Server(port);
 
         ServletContextHandler context =
                 new ServletContextHandler(ServletContextHandler.SESSIONS);
