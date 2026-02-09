@@ -8,7 +8,11 @@ public class ServerApp {
 
     public static void main(String[] args) throws Exception {
 
-        Server server = new Server(8080);
+        // ✅ Utiliser le port fourni par Render ou fallback sur 8080
+        String portEnv = System.getenv("PORT");
+        int port = portEnv != null ? Integer.parseInt(portEnv) : 8080;
+
+        Server server = new Server(port);
 
         ServletContextHandler context =
                 new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -17,7 +21,7 @@ public class ServerApp {
         // --- AUTH ---
         context.addServlet(new ServletHolder(new LoginServlet()), "/api/login");
 
-        // --- DASHBOARD (Statistiques globales) ---
+        // --- DASHBOARD ---
         context.addServlet(new ServletHolder(new DashboardServlet()), "/api/dashboard");
 
         // --- CLIENTS ---
@@ -28,30 +32,28 @@ public class ServerApp {
 
         // --- STOCK ---
         context.addServlet(new ServletHolder(new StockHistoriqueServlet()), "/api/stock/historique");
-        
-        // NOUVEAU : Route pour les alertes de stock critique
+
+        // --- ALERTES ---
         context.addServlet(new ServletHolder(new AlertesServlet()), "/api/alertes");
 
         // --- VENTE ---
         context.addServlet(new ServletHolder(new VenteServlet()), "/api/vente");
-        
-        // NOUVEAU : Route pour les rapports détaillés et CA
+
+        // --- RAPPORT ---
         context.addServlet(new ServletHolder(new RapportServlet()), "/api/rapport");
 
         // --- COMMANDE ---
         context.addServlet(new ServletHolder(new CommandeServlet()), "/api/commandes");
 
         server.setHandler(context);
-        
-        // Optionnel : Gestion du CORS au niveau du serveur si tu ne veux pas le mettre dans chaque Servlet
-        // Mais pour l'instant, tes Servlets le gèrent individuellement avec setHeader.
 
         server.start();
 
-        System.out.println(" Serveur PharmaSys lancé sur http://localhost:8080");
-        System.out.println(" Rapport API: http://localhost:8080/api/rapport");
-        System.out.println(" Alertes API: http://localhost:8080/api/alertes");
-        
+        // 🔹 Affichage des URLs publiques (Render utilisera HTTPS automatiquement)
+        System.out.println(" Serveur PharmaSys lancé sur le port " + port);
+        System.out.println(" Rapport API: /api/rapport");
+        System.out.println(" Alertes API: /api/alertes");
+
         server.join();
     }
 }
